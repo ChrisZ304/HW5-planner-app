@@ -1,43 +1,46 @@
-//page default to display current date and time
-$(document).readystate(function () {
-    $("currentDay").text(moment().format("DDDD MMM mo YYYY"));
-function dispDateTime() {
-    var currentDateTime = moment().hours();
+//function to retrieve input data
+$(document).ready(function () {
+    var keys = Object.keys(localStorage);
+    for ( i = 0; i < keys.length; i++) {
+        var value = localStorage.getItem(keys[i]);
+        var temp = $("#" + keys[i]).find("textarea")
+        temp.val(value);
     }
+    //click event to save data to local storage
+    $(".saveBtn").on("click", function (event) {
+        event.preventDefault();
+        var textVal = $(this).siblings(".description").val();
+        var timeVal= $(this).parent().attr("id");
 
-},
-//click event function for save to local storage
-$(".saveBtn").onclick(function(event) {
-    event.preventDefault()
-    var textVal = $(this).val //???
-    var  timeVal = $(this).dateTime.val //???
+        localStorage.setItem(textVal, timeVal);
+    });
 
-    localStorage.setItem(textValue, timeValue);
-}),
+    //webpage to always display current date and time
+    $("#currentDay").text(moment().format("LLL"));
+    function dispDateTime() {
+        var currentHours = moment().hours();
 
-//color coding past/future/present time blocks
-$(".time-block").each(function () {
-    var hourEl = $(function(){}).attr("id");
-    var hourDay = hourEl.substrings(hourEl.length);
-    var dateHourInt = parseInt(hourDay) //converting substring to number
-    var currentHourInt = parseInt(currentHours); //converting substring to number
-    console.log(dispDateTime) //???
-
-    //if time-block is prior to current date/time make class "past"
-    if (parseInt(dateHourInt) < parseInt(currentHourInt)) {
-        $(this).addClass("past");
-        $(this).removeClass("future");
-        $(this).removeClass("present");
-    } //if time-block is after current date/time make class "future"
-    else if (parseInt(dateHourInt) > parseInt(currentHourInt)) {
-        $(this).addClass("future");
-        $(this).removeClass("present");
-        $(this).removeClass("past");
-    } //if time-block is equal to current date/time make class "present"
-    else if (parseInt(dateHourInt) === parseInt(currentHourInt)) {
-        $(this).addClass("present");
-        $(this).removeClass("future");
-        $(this).removeClass("past");
-    }
-})
-)
+        $(".time-block").each(function () {
+            var hourEl = $(this).attr("id");
+            var hourDay = hourEl.substring(5, hourEl.length);
+            var hrDayInt = parseInt(hourDay)
+            var currentHrInt = parseInt(currentHours);
+            if (parseInt(hrDayInt) < parseInt(currentHrInt)) {
+                $(this).addClass("past");
+                $(this).removeClass("future");
+                $(this).removeClass("present");
+            }
+            else if (parseInt(hrDayInt) > parseInt(currentHrInt)) {
+                $(this).addClass("future");
+                $(this).removeClass("present");
+                $(this).removeClass("past");
+            }
+            else if (parseInt(hrDayInt) === parseInt(currentHrInt)) {
+                $(this).addClass("present");
+                $(this).removeClass("future");
+                $(this).removeClass("past");
+            }
+        })
+    };
+    dispDateTime();
+});
